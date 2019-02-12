@@ -6,12 +6,13 @@ type Culqi struct {
 }
 
 // New generate a new culqi config
-func New(config *Config) *Culqi {
+func New(merchantCode, apiKey, apiVersion, productName string) *Culqi {
 	return &Culqi{
 		config: &Config{
-			MerchantCode: config.MerchantCode,
-			APIKey:       config.APIKey,
-			APIVersion:   config.APIVersion,
+			MerchantCode: merchantCode,
+			APIKey:       apiKey,
+			APIVersion:   apiVersion,
+			ProductName:  productName,
 		},
 	}
 }

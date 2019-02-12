@@ -15,6 +15,13 @@ var PENCurrency = &Currency{
 	AssociatedImage: "pen.png",
 }
 
+// USDCurrency is a dollar money, (eeuu dollar)
+var USDCurrency = &Currency{
+	Type:            USD,
+	Symbol:          "$",
+	AssociatedImage: "usd.png",
+}
+
 // ChargeUserInformation have the user information for our charge
 type ChargeUserInformation struct {
 	Token       string
@@ -33,12 +40,19 @@ type Response struct {
 }
 
 // MakeCharge make a charge on culqi, with a currency
-func (c *Culqi) MakeCharge(uInformation ChargeUserInformation, how float64, currency *Currency) (*Response, error) {
-
+func (c *Culqi) MakeCharge(uInformation *ChargeUserInformation, how float64, currency *Currency) (*Response, error) {
 	a := how * float64(currency.Multiplier)
 	amount := int(a)
 
+	if amount < currency.Multiplier {
+		return nil, ErrInvalidProductName
+	}
+
 	productName := c.config.ProductName + "_" + strconv.Itoa(amount)
+
+	if len(productName) < 3 {
+		return nil, ErrInvalidProductName
+	}
 
 	resp, err := c.createCharge(&ChargeParams{
 		TokenID:            uInformation.Token,

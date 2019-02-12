@@ -1,0 +1,9 @@
+version: "2"
+
+tasks:
+  proto:
+    cmds:
+      - protoc --go_out=plugins=grpc:. grpc/*.proto
+  build:
+    deps: [proto]
+    silent: false
