@@ -1,21 +1,20 @@
-package main
+package culqi
 
 import (
 	"context"
 
-	culqi "github.com/bregydoc/micro-culqi"
 	mculqi "github.com/bregydoc/micro-culqi/grpc"
 	"github.com/golang/protobuf/ptypes"
 )
 
 // MCulqiService implements a culqi server
 type MCulqiService struct {
-	culqi *culqi.Culqi
+	c *Culqi
 }
 
-func newMCulqiService(c *culqi.Culqi) *MCulqiService {
+func NewMCulqiService(c *Culqi) *MCulqiService {
 	return &MCulqiService{
-		culqi: c,
+		c: c,
 	}
 }
 
@@ -25,22 +24,22 @@ func (m *MCulqiService) Charge(c context.Context, params *mculqi.ChargeParams) (
 	if countryCode == "" {
 		countryCode = "PE"
 	}
-	user := &culqi.ChargeUserInformation{
+	user := &ChargeUserInformation{
 		Email:       params.UserInfo.Email,
 		CountryCode: countryCode,
 		FirstName:   params.UserInfo.FirstName,
 		LastName:    params.UserInfo.LastName,
 		Token:       params.UserInfo.Token,
 	}
-	currency := &culqi.Currency{}
+	currency := &Currency{}
 
 	if params.Currency == mculqi.Currency_PEN {
-		currency = culqi.PENCurrency
+		currency = PENCurrency
 	} else if params.Currency == mculqi.Currency_USD {
-		currency = culqi.USDCurrency
+		currency = USDCurrency
 	}
 
-	resp, err := m.culqi.MakeCharge(user, float64(params.Amount), currency)
+	resp, err := m.c.MakeCharge(user, float64(params.Amount), currency)
 	if err != nil {
 		return nil, err
 	}

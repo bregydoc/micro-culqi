@@ -13,3 +13,10 @@ var ErrInvalidLastName = errors.New("invalid last name")
 
 // ErrInvalidProductName is an error
 var ErrInvalidProductName = errors.New("invalid product name")
+
+// ErrorResponseFromCulqi is a generic error culqi response
+type ErrorResponseFromCulqi struct {
+	Object          string `json:"object"`
+	Type            string `json:"type"`
+	MerchantMessage string `json:"merchant_message"`
+}

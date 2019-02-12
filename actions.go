@@ -2,6 +2,7 @@ package culqi
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -66,7 +67,20 @@ func (c *Culqi) MakeCharge(uInformation *ChargeUserInformation, how float64, cur
 	})
 
 	if resp.StatusCode != http.StatusCreated {
-		return nil, ErrInvalidCulqiResponse
+		data, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+		r := new(ErrorResponseFromCulqi)
+		err = json.Unmarshal(data, r)
+		if err != nil {
+			return nil, err
+		}
+		mError := "error from culqi: "
+		if r.Object == "error" {
+			mError += r.MerchantMessage
+		}
+		return nil, errors.New(mError)
 	}
 
 	data, err := ioutil.ReadAll(resp.Body)
