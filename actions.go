@@ -14,6 +14,7 @@ var PENCurrency = &Currency{
 	Type:            PEN,
 	Symbol:          "s/",
 	AssociatedImage: "pen.png",
+	Multiplier:      100,
 }
 
 // USDCurrency is a dollar money, (eeuu dollar)
@@ -21,6 +22,7 @@ var USDCurrency = &Currency{
 	Type:            USD,
 	Symbol:          "$",
 	AssociatedImage: "usd.png",
+	Multiplier:      100,
 }
 
 // ChargeUserInformation have the user information for our charge
@@ -55,7 +57,7 @@ func (c *Culqi) MakeCharge(uInformation *ChargeUserInformation, how float64, cur
 		return nil, ErrInvalidProductName
 	}
 
-	resp, err := c.createCharge(&ChargeParams{
+	chargeParams := &ChargeParams{
 		TokenID:            uInformation.Token,
 		Email:              uInformation.Email,
 		CountryCode:        uInformation.CountryCode,
@@ -64,7 +66,9 @@ func (c *Culqi) MakeCharge(uInformation *ChargeUserInformation, how float64, cur
 		Amount:             amount,
 		FirstName:          uInformation.FirstName,
 		LastName:           uInformation.LastName,
-	})
+	}
+
+	resp, err := c.createCharge(chargeParams)
 
 	if resp.StatusCode != http.StatusCreated {
 		data, err := ioutil.ReadAll(resp.Body)

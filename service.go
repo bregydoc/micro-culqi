@@ -3,7 +3,7 @@ package culqi
 import (
 	"context"
 
-	mculqi "github.com/bregydoc/micro-culqi/grpc"
+	"github.com/bregydoc/micro-culqi/grpc"
 	"github.com/golang/protobuf/ptypes"
 )
 

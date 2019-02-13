@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	conn, err := grpc.Dial("localhost:18000", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:18200", grpc.WithInsecure())
 	if err != nil {
 		panic(err)
 	}
@@ -21,11 +21,11 @@ func main() {
 		Currency: mculqi.Currency_PEN,
 		Amount:   10,
 		UserInfo: &mculqi.UserInformation{
-			FirstName:   "Bregy",
-			LastName:    "Malpartida",
-			Email:       "bregymr@gmail.com",
+			FirstName:   "Mateo",
+			LastName:    "Suarez",
+			Email:       "mateo@bombo.pe",
 			CountryCode: "PE",
-			Token:       "<YOUR GENERATED TOKEN>",
+			Token:       "<YOUR TOKEN HERE>",
 		},
 	})
 
