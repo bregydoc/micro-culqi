@@ -1,6 +1,9 @@
 package uculqi
 
-import "github.com/bregydoc/micro-culqi/littleid"
+import (
+	"github.com/bregydoc/micro-culqi/littleid"
+	"time"
+)
 
 type MinimalInformation struct {
 	Products []*Product
@@ -10,14 +13,16 @@ type MinimalInformation struct {
 }
 
 func newInvoiceWithMinimal(companyInfo *CompanyInfo, info *MinimalInformation) (*Invoice, error) {
+
 	invoice := &Invoice{
 		ID:      littleid.New(),
 		Email:   info.Email,
 		Company: companyInfo,
 		Order: &Order{
-			ID:       littleid.New(),
-			Currency: info.Currency,
-			Token:    info.Token,
+			ID:        littleid.New(),
+			CreatedAt: time.Now(),
+			Currency:  info.Currency,
+			Token:     info.Token,
 			Info: &PersonInfo{
 				Email: info.Email,
 			},

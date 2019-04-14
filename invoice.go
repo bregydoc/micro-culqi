@@ -26,7 +26,7 @@ func (invoice *Invoice) IsValid() bool {
 		return false
 	}
 
-	if re.MatchString(invoice.Email) {
+	if !re.MatchString(invoice.Email) {
 		return false
 	}
 
