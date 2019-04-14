@@ -3,7 +3,9 @@ version: "2"
 tasks:
   proto:
     cmds:
-      - protoc --go_out=plugins=grpc:. grpc/*.proto
+      - protoc --go_out=plugins=grpc:. proto/*.proto
   build:
     deps: [proto]
     silent: false
+    cmds:
+      - go build -o uculqi

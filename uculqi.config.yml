@@ -1,0 +1,17 @@
+---
+culqi:
+  merchant_code: "<YOUR MERCHANT CODE>"
+  api_key: "<YOUR PRIVATE API KEY>"
+mailjet:
+  user: "<MAILJET_USERNAME>"
+  password: "<MAILJET_PASSWORD>"
+  from_name: "uCulqi"
+  from_email: "example@example.com"
+store:
+  filepath: "uculqi.db"
+company:
+  name: "uCulqi Corp"
+  phone_support: "123-123456789"
+  email_support: "support@example.com"
+  template_filename: "basic-receipt.html"
+  max_attempts: 5

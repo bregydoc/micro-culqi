@@ -1,22 +1,8 @@
-package culqi
+package uculqi
 
 import "errors"
 
-// ErrInvalidCulqiResponse is an error
-var ErrInvalidCulqiResponse = errors.New("invalid culqi response")
-
-// ErrInvalidFirstName is an error
-var ErrInvalidFirstName = errors.New("invalid first name")
-
-// ErrInvalidLastName is an error
-var ErrInvalidLastName = errors.New("invalid last name")
-
-// ErrInvalidProductName is an error
-var ErrInvalidProductName = errors.New("invalid product name")
-
-// ErrorResponseFromCulqi is a generic error culqi response
-type ErrorResponseFromCulqi struct {
-	Object          string `json:"object"`
-	Type            string `json:"type"`
-	MerchantMessage string `json:"merchant_message"`
-}
+var ErrInvalidInvoice = errors.New("invalid invoice, please check your information")
+var ErrInvoiceNotCharged = errors.New("your invoice are not charged yet")
+var ErrInvoiceAlreadyCharged = errors.New("your invoice already was charged")
+var ErrInvoiceNotFound = errors.New("invoice not found")

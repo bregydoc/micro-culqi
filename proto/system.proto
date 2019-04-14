@@ -1,0 +1,89 @@
+syntax = "proto3";
+package culqi;
+
+import "google/protobuf/any.proto";
+
+option go_package = "pculqi";
+
+service UCulqi {
+    rpc ExecuteCharge(MinimalInvoice) returns (Invoice);
+    rpc ExecuteChargeWithOrder(Order) returns (Invoice);
+    rpc GetInvoiceByID(InvoiceID) returns (Invoice);
+    rpc UpdateEmailTemplate(TemplateData) returns (IsOk);
+}
+
+message IsOk {
+    bool ok = 1;
+}
+
+message TemplateData {
+    string data = 1;
+}
+
+message InvoiceID {
+    string id = 1;
+}
+
+enum AvailableCurrency {
+    PEN = 0;
+    USD = 1;
+}
+
+message MinimalInvoice {
+    string token = 1;
+    string email = 2;
+    repeated Product products = 3;
+    AvailableCurrency currency = 4;
+}
+
+message Product {
+    string name = 1;
+    string description = 2;
+    double price = 3;
+    AvailableCurrency currency = 4;
+}
+
+message Currency {
+    string name = 1;
+    string symbol = 2;
+    string code = 3;
+    int32 multiplier = 4;
+}
+
+message Order {
+    string id = 1;
+	string createdAt = 2;
+	string token = 3;
+	repeated Product products = 4;
+	PersonInfo info = 5;
+	Currency currency = 6;
+	string card = 7;
+    double discount = 8;
+	map<string, google.protobuf.Any> metadata = 9;
+}
+
+message PersonInfo {
+    string name = 1;
+    string email = 2;
+    string idNumber = 3;
+    int64 phone = 4;
+    string address = 5;
+    string addressCity = 6;
+    string countryCode = 7;
+}
+
+message Invoice {
+    string id = 1;
+    Order order = 2;
+    string email = 3;
+    bool charged = 4;
+    CompanyInfo company = 5;
+    string chargedAt = 6;
+    string externalId = 7;
+}
+
+message CompanyInfo {
+    string name = 1;
+    string phoneSupport = 2;
+    string emailSupport = 3;
+}
