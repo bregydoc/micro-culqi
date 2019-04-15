@@ -16,4 +16,3 @@ secrets:
     file: ./server.crt
   key:
     file: ./server.key
-
