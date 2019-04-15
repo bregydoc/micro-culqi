@@ -1,0 +1,18 @@
+version: "3.7"
+
+services:
+  uculqi:
+    build: .
+    ports:
+      - 18000:18000
+    secrets:
+      - cert
+      - key
+    volumes:
+      - ./uculqi.config.yml:/etc/uculqi/uculqi.config.yml
+secrets:
+  cert:
+    file: ./server.crt
+  key:
+    file: ./server.key
+

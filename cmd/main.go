@@ -10,6 +10,7 @@ import (
 	"github.com/bregydoc/micro-culqi/stores"
 	"github.com/k0kubun/pp"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"io/ioutil"
 	"log"
 	"net"
@@ -18,7 +19,7 @@ import (
 
 func main() {
 	servicePort := flag.Int64("port", 18000, "Define the service port")
-	configPath := flag.String("config", "uculqi.config.yml", "Where your config file is it")
+	configPath := flag.String("config", "/etc/uculqi/uculqi.config.yml", "Where your config file is it")
 	flag.Parse()
 
 	config, err := parseConfig(*configPath)
@@ -66,12 +67,42 @@ func main() {
 		},
 	}
 
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *servicePort))
-	if err != nil {
-		panic(err)
+	// Check if we have TLS a secure connection
+	withTLS := true
+	certificate := "/run/secrets/cert"
+	key := "/run/secrets/key"
+
+	_, err = os.Open(certificate)
+	if err != nil || os.IsNotExist(err) {
+		withTLS = false
+	}
+	if withTLS {
+		_, err = os.Open(key)
+		if err != nil || os.IsNotExist(err) {
+			withTLS = false
+		}
 	}
 
-	grpcServer := grpc.NewServer()
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *servicePort))
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+
+	var grpcServer *grpc.Server
+
+	if withTLS {
+		log.Println("setting with TLS from \"" + certificate + "\" and \"" + key + "\"")
+		c, err := credentials.NewServerTLSFromFile(certificate, key)
+		if err != nil {
+			log.Fatalf("Failed to setup tls: %v", err)
+		}
+		grpcServer = grpc.NewServer(
+			grpc.Creds(c),
+		)
+	} else {
+		log.Println("setting without security")
+		grpcServer = grpc.NewServer()
+	}
 
 	pculqi.RegisterUCulqiServer(grpcServer, s)
 

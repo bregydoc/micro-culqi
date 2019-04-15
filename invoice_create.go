@@ -13,7 +13,6 @@ type MinimalInformation struct {
 }
 
 func newInvoiceWithMinimal(companyInfo *CompanyInfo, info *MinimalInformation) (*Invoice, error) {
-
 	invoice := &Invoice{
 		ID:      littleid.New(),
 		Email:   info.Email,
