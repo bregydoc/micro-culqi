@@ -8,17 +8,23 @@ import (
 	"github.com/bregydoc/micro-culqi/messaging"
 	"github.com/bregydoc/micro-culqi/proto"
 	"github.com/bregydoc/micro-culqi/stores"
-	"github.com/k0kubun/pp"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"io/ioutil"
 	"log"
 	"net"
 	"os"
+	"strconv"
 )
 
 func main() {
-	servicePort := flag.Int64("port", 18000, "Define the service port")
+
+	port := os.Getenv("PORT")
+	servicePort, err := strconv.Atoi(port)
+	if err != nil {
+		servicePort = 18000
+	}
+
 	configPath := flag.String("config", "/etc/uculqi/uculqi.config.yml", "Where your config file is it")
 	flag.Parse()
 
@@ -26,8 +32,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	pp.Println(config)
 
 	charger := &chargers.CulqiCharger{
 		ApiKey:       config.Culqi.ApiKey,
@@ -83,7 +87,7 @@ func main() {
 		}
 	}
 
-	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *servicePort))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", servicePort))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
@@ -106,7 +110,7 @@ func main() {
 
 	pculqi.RegisterUCulqiServer(grpcServer, s)
 
-	log.Printf("[For Developers] GRPC listening on :%d\n", *servicePort)
+	log.Printf("[For Developers] GRPC listening on :%d\n", servicePort)
 	err = grpcServer.Serve(lis)
 	if err != nil {
 		panic(err)
