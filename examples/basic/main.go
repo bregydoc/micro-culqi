@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/bregydoc/micro-culqi/proto"
+	"github.com/k0kubun/pp"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"log"
@@ -19,7 +20,7 @@ func main() {
 
 	invoice, err := client.ExecuteCharge(context.TODO(), &pculqi.MinimalInvoice{
 		Currency: pculqi.AvailableCurrency_PEN,
-		Token:    "tkn_live_0CjjdWhFpEAZlxlz",
+		Token:    "tkn_test_GXVfBl8hFgxj6E9x",
 		Products: []*pculqi.Product{
 			{Name: "Dry Herb Vaporizer", Currency: pculqi.AvailableCurrency_PEN, Price: 20.0},
 		},
@@ -30,4 +31,13 @@ func main() {
 	}
 
 	log.Println("invoice code: " + invoice.Id + " was charged correctly")
+
+	inv, err := client.GetInvoiceByID(context.TODO(), &pculqi.InvoiceID{
+		Id: invoice.Id,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	pp.Println(inv)
 }
