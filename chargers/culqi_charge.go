@@ -48,7 +48,13 @@ func (q *CulqiCharger) invoiceToCharge(i *uculqi.Invoice) *chargeParams {
 	}
 
 	names := strings.Split(i.Order.Info.Name, " ")
-	firsName, lastName := names[0], names[1]
+	var firstName, lastName string
+
+	if len(names) > 1 {
+		firstName, lastName = names[0], names[1]
+	} else if len(names) > 0 {
+		firstName = names[0]
+	}
 
 	return &chargeParams{
 		Token:       i.Order.Token,
@@ -56,7 +62,7 @@ func (q *CulqiCharger) invoiceToCharge(i *uculqi.Invoice) *chargeParams {
 		Description: description,
 		Amount:      int(totalAmount),
 		AntifraudDetails: antifraudDetails{
-			FirstName:   firsName,
+			FirstName:   firstName,
 			LastName:    lastName,
 			CountryCode: i.Order.Info.CountryCode,
 			PhoneNumber: i.Order.Info.Phone,
