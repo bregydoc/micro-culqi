@@ -15,28 +15,28 @@ type chargeResponse struct {
 }
 
 type antifraudDetails struct {
-	FirstName   string `json:"first_name"`
-	LastName    string `json:"last_name"`
-	Address     string `json:"address"`
-	AddressCity string `json:"address_city"`
-	PhoneNumber int64  `json:"phone_number"`
-	CountryCode string `json:"country_code"`
+	FirstName   string `json:"first_name,omitempty"`
+	LastName    string `json:"last_name,omitempty"`
+	Address     string `json:"address,omitempty"`
+	AddressCity string `json:"address_city,omitempty"`
+	PhoneNumber int64  `json:"phone_number,omitempty"`
+	CountryCode string `json:"country_code,omitempty"`
 }
 
 type chargeParams struct {
 	Token            string           `json:"source_id"`
-	Email            string           `json:"email"`
-	CurrencyCode     string           `json:"currency_code"`
-	Amount           int              `json:"amount"`
-	Installments     int              `json:"installments"`
-	Description      string           `json:"description"`
-	AntifraudDetails antifraudDetails `json:"antifraud_details"`
+	Email            string           `json:"email,omitempty"`
+	CurrencyCode     string           `json:"currency_code,omitempty"`
+	Amount           int              `json:"amount,omitempty"`
+	Installments     int              `json:"installments,omitempty"`
+	Description      string           `json:"description,omitempty"`
+	AntifraudDetails antifraudDetails `json:"antifraud_details,omitempty"`
 }
 
 type errorResponseFromCulqi struct {
-	Object          string `json:"object"`
-	Type            string `json:"type"`
-	MerchantMessage string `json:"merchant_message"`
+	Object          string `json:"object,omitempty"`
+	Type            string `json:"type,omitempty"`
+	MerchantMessage string `json:"merchant_message,omitempty"`
 }
 
 func (q *CulqiCharger) invoiceToCharge(i *uculqi.Invoice) *chargeParams {
