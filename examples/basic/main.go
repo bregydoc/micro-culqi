@@ -2,11 +2,12 @@ package main
 
 import (
 	"context"
-	"github.com/bregydoc/micro-culqi/proto"
+	"log"
+
+	pculqi "github.com/bregydoc/micro-culqi/proto"
 	"github.com/k0kubun/pp"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
-	"log"
 )
 
 func main() {
@@ -18,14 +19,23 @@ func main() {
 	// error handling omitted
 	client := pculqi.NewUCulqiClient(conn)
 
-	invoice, err := client.ExecuteCharge(context.TODO(), &pculqi.MinimalInvoice{
-		Currency: pculqi.AvailableCurrency_PEN,
-		Token:    "tkn_test_GXVfBl8hFgxj6E9x",
+	invoice, err := client.ExecuteChargeWithOrder(context.TODO(), &pculqi.Order{
+		Id:       "AS1AG",
+		Token:    "tkn_test_8thZUSDLMkozRQi7",
+		Currency: pculqi.PEN,
+		Info: &pculqi.PersonInfo{
+			Name:        "Bregy Malpartida",
+			Email:       "bregymr@gmail.com",
+			Phone:       957821858,
+			CountryCode: "PE",
+		},
+		Card:     "****1111",
+		Discount: 2.0,
 		Products: []*pculqi.Product{
 			{Name: "Dry Herb Vaporizer", Currency: pculqi.AvailableCurrency_PEN, Price: 20.0},
 		},
-		Email: "bregymr@gmail.com",
 	})
+
 	if err != nil {
 		panic(err)
 	}

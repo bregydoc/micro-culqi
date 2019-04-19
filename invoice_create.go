@@ -41,6 +41,10 @@ func newInvoiceWithMinimal(companyInfo *CompanyInfo, info *MinimalInformation) (
 }
 
 func newFullInvoice(companyInfo *CompanyInfo, order *Order) (*Invoice, error) {
+	if order.ID == "" {
+		order.ID = littleid.New()
+	}
+
 	invoice := &Invoice{
 		ID:      littleid.New(),
 		Order:   order,
