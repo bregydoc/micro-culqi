@@ -4,18 +4,18 @@ import (
 	"context"
 	"log"
 
-	pculqi "github.com/bregydoc/micro-culqi/proto"
+	"github.com/bregydoc/micro-culqi/proto"
 	"github.com/k0kubun/pp"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )
 
 func main() {
-	creds, _ := credentials.NewClientTLSFromFile(
+	c, _ := credentials.NewClientTLSFromFile(
 		"/Users/macbook/Documents/bombo/bombo-culqi/server.crt",
 		"",
 	)
-	conn, err := grpc.Dial("localhost:18000", grpc.WithTransportCredentials(creds))
+	conn, err := grpc.Dial("localhost:18000", grpc.WithTransportCredentials(c))
 	// error handling omitted
 	client := pculqi.NewUCulqiClient(conn)
 

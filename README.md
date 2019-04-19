@@ -1,5 +1,8 @@
-# micro-culqi
-Micro-culqi is a micro service related to culqi charges and culqi subscriptions
+![logo](./uculqilogo.png)
+
+# MicroCulqi
+
+uCulqi is a microservice to mount a simple grpc service to make charges and save and send invoices to your customers. The first principle of this microservice is make very simple install your [Culqi](https://culqi.com/) backend. uCulqi uses [Mailjet](https://www.mailjet.com/) as SMTP service, in the future Im going to implement another backends for this task.
 
 ## Features
 - Charges with Culqi
@@ -8,5 +11,71 @@ Micro-culqi is a micro service related to culqi charges and culqi subscriptions
 - Containable
 - Auto-send invoices email
 
-## TODO
-- [] Modeling the proto services
+
+
+## Install
+
+Microculqi (uCulqi) are compiled as a docker image and you can pull from docker hub with the following command:
+
+`docker pull bregymr/uculqi`
+
+You need two files to run your uculqi instance: your uculqi.config.yml file and a simple template.html file:
+
+### uculqi.config.yml
+
+A minimal configuration example below.
+
+```yaml
+company:
+  name: "uCulqi Corp"
+  email_support: "support@example.com"
+culqi:
+  merchant_code: "<YOUR MERCHANT CODE>"
+  api_key: "<YOUR PRIVATE API KEY>"
+```
+
+[Here](https://github.com/bregydoc/micro-culqi/blob/master/examples/server-mount/uculqi.config.yml) you can see a complete config file.
+
+
+
+### template.html
+
+The template html is an text-template based on [go template package](https://golang.org/pkg/text/template/), you can build your own invoice template based on your invoice information. You can see your allowed template values [here](https://github.com/bregydoc/micro-culqi/blob/master/invoice_template.go).
+
+A simple and basic example of the template is the following html:
+
+```html
+<html>
+  <body>
+    <h1> Invoice {{.ID}} </h1>
+    Total: {{.TotalCost}}
+  </body>
+</html>
+```
+
+
+
+With this requirements satisfied you can to run uCulqi with:
+
+`docker run -p 18000:18000 -v $(pwd)/uculqi.config.yml:/etc/uculqi/uculqi.config.yml -v  $(pwd)/template.html:/etc/uculqi/template.html bregymr/uculqi `
+
+## Usage
+
+
+
+
+
+## Todo
+
+
+
+
+
+
+
+
+
+
+
+
+
