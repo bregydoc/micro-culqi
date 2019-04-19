@@ -2,10 +2,9 @@ package main
 
 import (
 	"context"
-	"log"
-
+	"encoding/json"
+	"fmt"
 	"github.com/bregydoc/micro-culqi/proto"
-	"github.com/k0kubun/pp"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )
@@ -40,14 +39,7 @@ func main() {
 		panic(err)
 	}
 
-	log.Println("invoice code: " + invoice.Id + " was charged correctly")
+	d, _ := json.Marshal(invoice)
 
-	inv, err := client.GetInvoiceByID(context.TODO(), &pculqi.InvoiceID{
-		Id: invoice.Id,
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	pp.Println(inv)
+	fmt.Println(string(d))
 }
