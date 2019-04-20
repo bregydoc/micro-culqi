@@ -18,27 +18,26 @@ func main() {
 	// error handling omitted
 	client := pculqi.NewUCulqiClient(conn)
 
-	// Creating the invoice
-	invoice, err := client.CreateNewInvoice(context.TODO(), &pculqi.MinimalInvoice{
+	invoice, err := client.CreateNewInvoiceWithOrder(context.TODO(), &pculqi.Order{
 		Token:    "tkn_test_8thZUSDLMkozRQi7",
 		Currency: pculqi.PEN,
+		Info: &pculqi.PersonInfo{
+			Name:        "Bregy Malpartida",
+			Email:       "bregymr@gmail.com",
+			Phone:       957821858,
+			CountryCode: "PE",
+		},
+		Card:     "****1111",
+		Discount: 2.0,
 		Products: []*pculqi.Product{
 			{Name: "Dry Herb Vaporizer", Currency: pculqi.PEN, Price: 20.0},
 		},
-		Email: "customer@example.com",
 	})
 	if err != nil {
 		panic(err)
 	}
 
-	// Charging the invoice
 	invoice, err = client.ChargeInvoice(context.TODO(), &pculqi.InvoiceID{Id: invoice.Id})
-	if err != nil {
-		panic(err)
-	}
-
-	// Sending invoice as email
-	invoice, err = client.SendInvoiceAsEmail(context.TODO(), &pculqi.InvoiceID{Id: invoice.Id})
 	if err != nil {
 		panic(err)
 	}

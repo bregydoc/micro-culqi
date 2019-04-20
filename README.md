@@ -133,26 +133,37 @@ func main() {
 	)
 	
 	conn, err := grpc.Dial("localhost:18000", grpc.WithTransportCredentials(c))
-	// error handling omitted
-	
-	client := pculqi.NewUCulqiClient(conn)
-
-	invoice, err := client.ExecuteCharge(context.TODO(), &pculqi.MinimalInvoice{
-		Currency: pculqi.AvailableCurrency_PEN,
-		Token:    "<YOUR CULQI GENERATED TOKEN>",
-		Products: []*pculqi.Product{
-			{Name: "Dry Herb Vaporizer", Currency: pculqi.AvailableCurrency_PEN, Price: 20.0},
-		},
-		Email: "customer@example.com",
-	})
-  
-	if err != nil {
-		panic(err)
-	}
-	
-	d, _ := json.Marshal(invoice)
-	
-	fmt.Println(string(d))
+    	// error handling omitted
+    	client := pculqi.NewUCulqiClient(conn)
+    
+    	// Creating the invoice
+    	invoice, err := client.CreateNewInvoice(context.TODO(), &pculqi.MinimalInvoice{
+    		Token:    "YOUR CULQI TOKEN HERE",
+    		Currency: pculqi.PEN,
+    		Products: []*pculqi.Product{
+    			{Name: "Dry Herb Vaporizer", Currency: pculqi.PEN, Price: 20.0},
+    		},
+    		Email: "customer@example.com",
+    	})
+    	if err != nil {
+    		panic(err)
+    	}
+    
+    	// Charging the invoice
+    	invoice, err = client.ChargeInvoice(context.TODO(), &pculqi.InvoiceID{Id: invoice.Id})
+    	if err != nil {
+    		panic(err)
+    	}
+    
+    	// Sending invoice as email
+    	invoice, err = client.SendInvoiceAsEmail(context.TODO(), &pculqi.InvoiceID{Id: invoice.Id})
+    	if err != nil {
+    		panic(err)
+    	}
+    
+    	d, _ := json.Marshal(invoice)
+    
+    	fmt.Println(string(d))
 }
 ```
 
