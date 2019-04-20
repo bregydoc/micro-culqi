@@ -11,5 +11,5 @@ type Order struct {
 	Currency  *Currency
 	Card      string
 	Discount  float64
-	Metadata  map[string]interface{}
+	Metadata  map[string]string
 }

@@ -156,8 +156,6 @@ func main() {
 }
 ```
 
-
-
 Another process than you can execute with uCulqi:
 
 ```go
@@ -169,8 +167,6 @@ func (s *Service) UpdateEmailTemplate(c context.Context, params *pculqi.Template
 
 func (s *Service) ExecuteChargeWithOrder(c context.Context, order *pculqi.Order) (*pculqi.Invoice, error){}
 ```
-
-
 
 
 

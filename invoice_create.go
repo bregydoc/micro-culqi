@@ -26,7 +26,7 @@ func newInvoiceWithMinimal(companyInfo *CompanyInfo, info *MinimalInformation) (
 				Email: info.Email,
 			},
 			Products: info.Products,
-			Metadata: map[string]interface{}{
+			Metadata: map[string]string{
 				"created_with": "minimal",
 			},
 		},

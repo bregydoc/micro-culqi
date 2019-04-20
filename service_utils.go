@@ -2,7 +2,6 @@ package uculqi
 
 import (
 	"github.com/bregydoc/micro-culqi/proto"
-	"github.com/golang/protobuf/ptypes/any"
 
 	"time"
 )
@@ -11,10 +10,10 @@ func (s *Service) invoiceProtoToNative(invoice *pculqi.Invoice) *Invoice {
 	products := make([]*Product, 0)
 	for _, p := range invoice.Order.Products {
 		var currency *Currency
-		switch p.Currency {
-		case pculqi.AvailableCurrency_PEN:
+		switch p.Currency.Code {
+		case pculqi.PEN.Code:
 			currency = PEN
-		case pculqi.AvailableCurrency_USD:
+		case pculqi.USD.Code:
 			currency = USD
 		default:
 			currency = PEN
@@ -45,7 +44,7 @@ func (s *Service) invoiceProtoToNative(invoice *pculqi.Invoice) *Invoice {
 			Card:      invoice.Order.Card,
 			Discount:  invoice.Order.Discount,
 			CreatedAt: createdAt,
-			Metadata:  map[string]interface{}{},
+			Metadata:  map[string]string{},
 			Currency: &Currency{
 				Name:       invoice.Order.Currency.Name,
 				Code:       invoice.Order.Currency.Code,
@@ -70,14 +69,14 @@ func (s *Service) invoiceProtoToNative(invoice *pculqi.Invoice) *Invoice {
 func (s *Service) invoiceNativeToProto(invoice *Invoice) *pculqi.Invoice {
 	resProducts := make([]*pculqi.Product, 0)
 	for _, p := range invoice.Order.Products {
-		var currency pculqi.AvailableCurrency
+		var currency *pculqi.Currency
 		switch p.Currency {
 		case PEN:
-			currency = pculqi.AvailableCurrency_PEN
+			currency = pculqi.PEN
 		case USD:
-			currency = pculqi.AvailableCurrency_USD
+			currency = pculqi.USD
 		default:
-			currency = pculqi.AvailableCurrency_PEN
+			currency = pculqi.PEN
 		}
 		resProducts = append(resProducts, &pculqi.Product{
 			Name:        p.Name,
@@ -104,7 +103,7 @@ func (s *Service) invoiceNativeToProto(invoice *Invoice) *pculqi.Invoice {
 			Card:      invoice.Order.Card,
 			Discount:  invoice.Order.Discount,
 			CreatedAt: invoice.Order.CreatedAt.String(),
-			Metadata:  map[string]*any.Any{},
+			Metadata:  map[string]string{},
 			Currency: &pculqi.Currency{
 				Name:       invoice.Order.Currency.Name,
 				Code:       invoice.Order.Currency.Code,
@@ -131,10 +130,10 @@ func (s *Service) orderProtoToNative(order *pculqi.Order) *Order {
 	products := make([]*Product, 0)
 	for _, p := range order.Products {
 		var currency *Currency
-		switch p.Currency {
-		case pculqi.AvailableCurrency_PEN:
+		switch p.Currency.Code {
+		case pculqi.PEN.Code:
 			currency = PEN
-		case pculqi.AvailableCurrency_USD:
+		case pculqi.USD.Code:
 			currency = USD
 		default:
 			currency = PEN
@@ -164,7 +163,7 @@ func (s *Service) orderProtoToNative(order *pculqi.Order) *Order {
 		Card:      order.Card,
 		Discount:  order.Discount,
 		CreatedAt: createdAt,
-		Metadata:  map[string]interface{}{},
+		Metadata:  map[string]string{},
 		Products:  products,
 		Currency:  currency,
 		Info: &PersonInfo{

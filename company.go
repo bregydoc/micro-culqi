@@ -67,18 +67,19 @@ func (c *Company) chargeInvoiceByID(id string) (*Invoice, error) {
 	return invoice, nil
 }
 
-func (c *Company) sendInvoiceAsEmail(id string) error {
+func (c *Company) sendInvoiceAsEmail(id string) (*Invoice, error) {
 	invoice, err := c.Store.GetInvoice(id)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	templateData, err := ioutil.ReadFile(c.TemplateFilename)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	for i := 0; i == 0 || i < c.SendMaxAttempt && err != nil; i++ {
 		err = c.Messaging.SendInvoiceByEmail(string(templateData), invoice)
 	}
-	return err
+
+	return invoice, err
 }

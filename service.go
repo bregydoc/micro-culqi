@@ -10,14 +10,14 @@ type Service struct {
 	Company *Company
 }
 
-func (s *Service) ExecuteCharge(c context.Context, params *pculqi.MinimalInvoice) (*pculqi.Invoice, error) {
+func (s *Service) CreateNewInvoice(c context.Context, minimal *pculqi.MinimalInvoice) (*pculqi.Invoice, error) {
 	products := make([]*Product, 0)
-	for _, p := range params.Products {
+	for _, p := range minimal.Products {
 		var currency *Currency
-		switch p.Currency {
-		case pculqi.AvailableCurrency_PEN:
+		switch p.Currency.Code {
+		case pculqi.PEN.Code:
 			currency = PEN
-		case pculqi.AvailableCurrency_USD:
+		case pculqi.USD.Code:
 			currency = USD
 		default:
 			currency = PEN
@@ -30,17 +30,17 @@ func (s *Service) ExecuteCharge(c context.Context, params *pculqi.MinimalInvoice
 		})
 	}
 	var currency *Currency
-	switch params.Currency {
-	case pculqi.AvailableCurrency_PEN:
+	switch minimal.Currency.Code {
+	case pculqi.PEN.Code:
 		currency = PEN
-	case pculqi.AvailableCurrency_USD:
+	case pculqi.USD.Code:
 		currency = USD
 	default:
 		currency = PEN
 	}
 	invoice, err := s.Company.generateNewInvoice(
-		params.Token,
-		params.Email,
+		minimal.Token,
+		minimal.Email,
 		products,
 		currency,
 	)
@@ -49,21 +49,37 @@ func (s *Service) ExecuteCharge(c context.Context, params *pculqi.MinimalInvoice
 		return nil, err
 	}
 
-	invoice, err = s.Company.chargeInvoiceByID(invoice.ID)
+	return s.invoiceNativeToProto(invoice), nil
+}
+
+func (s *Service) CreateNewInvoiceWithOrder(c context.Context, order *pculqi.Order) (*pculqi.Invoice, error) {
+	invoice, err := s.Company.generateNewInvoiceWithOrder(s.orderProtoToNative(order))
 	if err != nil {
 		return nil, err
 	}
 
-	err = s.Company.sendInvoiceAsEmail(invoice.ID)
+	return s.invoiceNativeToProto(invoice), nil
+}
+
+func (s *Service) ChargeInvoice(c context.Context, invoiceID *pculqi.InvoiceID) (*pculqi.Invoice, error) {
+	invoice, err := s.Company.chargeInvoiceByID(invoiceID.Id)
 	if err != nil {
 		return nil, err
 	}
 
+	return s.invoiceNativeToProto(invoice), nil
+}
+
+func (s *Service) SendInvoiceAsEmail(c context.Context, invoiceID *pculqi.InvoiceID) (*pculqi.Invoice, error) {
+	invoice, err := s.Company.sendInvoiceAsEmail(invoiceID.Id)
+	if err != nil {
+		return nil, err
+	}
 	return s.invoiceNativeToProto(invoice), err
 }
 
-func (s *Service) GetInvoiceByID(c context.Context, params *pculqi.InvoiceID) (*pculqi.Invoice, error) {
-	invoice, err := s.Company.Store.GetInvoice(params.Id)
+func (s *Service) GetInvoiceByID(c context.Context, invoiceID *pculqi.InvoiceID) (*pculqi.Invoice, error) {
+	invoice, err := s.Company.Store.GetInvoice(invoiceID.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -78,23 +94,4 @@ func (s *Service) UpdateEmailTemplate(c context.Context, params *pculqi.Template
 	}
 
 	return &pculqi.IsOk{Ok: true}, nil
-}
-
-func (s *Service) ExecuteChargeWithOrder(c context.Context, order *pculqi.Order) (*pculqi.Invoice, error) {
-	invoice, err := s.Company.generateNewInvoiceWithOrder(s.orderProtoToNative(order))
-	if err != nil {
-		return nil, err
-	}
-
-	invoice, err = s.Company.chargeInvoiceByID(invoice.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	err = s.Company.sendInvoiceAsEmail(invoice.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	return s.invoiceNativeToProto(invoice), err
 }

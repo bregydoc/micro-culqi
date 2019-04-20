@@ -1,13 +1,13 @@
 syntax = "proto3";
 package culqi;
 
-import "google/protobuf/any.proto";
-
 option go_package = "pculqi";
 
 service UCulqi {
-    rpc ExecuteCharge(MinimalInvoice) returns (Invoice);
-    rpc ExecuteChargeWithOrder(Order) returns (Invoice);
+    rpc CreateNewInvoice(MinimalInvoice) returns (Invoice);
+    rpc CreateNewInvoiceWithOrder(Order) returns (Invoice);
+    rpc ChargeInvoice(InvoiceID) returns (Invoice);
+    rpc SendInvoiceAsEmail(InvoiceID) returns (Invoice);
     rpc GetInvoiceByID(InvoiceID) returns (Invoice);
     rpc UpdateEmailTemplate(TemplateData) returns (IsOk);
 }
@@ -24,23 +24,19 @@ message InvoiceID {
     string id = 1;
 }
 
-enum AvailableCurrency {
-    PEN = 0;
-    USD = 1;
-}
 
 message MinimalInvoice {
     string token = 1;
     string email = 2;
     repeated Product products = 3;
-    AvailableCurrency currency = 4;
+    Currency currency = 4;
 }
 
 message Product {
     string name = 1;
     string description = 2;
     double price = 3;
-    AvailableCurrency currency = 4;
+    Currency currency = 4;
 }
 
 message Currency {
@@ -59,7 +55,7 @@ message Order {
 	Currency currency = 6;
 	string card = 7;
     double discount = 8;
-	map<string, google.protobuf.Any> metadata = 9;
+	map<string, string> metadata = 9;
 }
 
 message PersonInfo {
