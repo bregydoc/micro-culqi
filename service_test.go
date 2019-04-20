@@ -22,17 +22,17 @@ func TestUpdateEmailTemplate(t *testing.T) {
 	}
 }
 
-func TestExecuteCharge(t *testing.T) {
+func TestCreateNewInvoice(t *testing.T) {
 	s := &Service{
 		Company: &Company{},
 	}
 
-	invoice, err := s.ExecuteCharge(context.Background(), &pculqi.MinimalInvoice{
+	invoice, err := s.CreateNewInvoice(context.Background(), &pculqi.MinimalInvoice{
 		Email: "",
 		Products: []*pculqi.Product{
-			{Name: "A", Price: 1.2, Currency: pculqi.AvailableCurrency_PEN},
+			{Name: "A", Price: 1.2, Currency: pculqi.PEN},
 		},
-		Currency: pculqi.AvailableCurrency_PEN,
+		Currency: pculqi.PEN,
 		Token:    "<Neh>",
 	})
 

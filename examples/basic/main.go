@@ -18,7 +18,7 @@ func main() {
 	// error handling omitted
 	client := pculqi.NewUCulqiClient(conn)
 
-	invoice, err := client.ExecuteChargeWithOrder(context.TODO(), &pculqi.Order{
+	invoice, err := client.CreateNewInvoiceWithOrder(context.TODO(), &pculqi.Order{
 		Id:       "AS1AG",
 		Token:    "tkn_test_8thZUSDLMkozRQi7",
 		Currency: pculqi.PEN,
@@ -31,10 +31,14 @@ func main() {
 		Card:     "****1111",
 		Discount: 2.0,
 		Products: []*pculqi.Product{
-			{Name: "Dry Herb Vaporizer", Currency: pculqi.AvailableCurrency_PEN, Price: 20.0},
+			{Name: "Dry Herb Vaporizer", Currency: pculqi.PEN, Price: 20.0},
 		},
 	})
+	if err != nil {
+		panic(err)
+	}
 
+	invoice, err = client.ChargeInvoice(context.TODO(), &pculqi.InvoiceID{Id: invoice.Id})
 	if err != nil {
 		panic(err)
 	}
