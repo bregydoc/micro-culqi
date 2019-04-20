@@ -138,7 +138,7 @@ func main() {
     
     	// Creating the invoice
     	invoice, err := client.CreateNewInvoice(context.TODO(), &pculqi.MinimalInvoice{
-    		Token:    "YOUR CULQI TOKEN HERE",
+    		Token:    "<YOUR CULQI GENERATED TOKEN>",
     		Currency: pculqi.PEN,
     		Products: []*pculqi.Product{
     			{Name: "Dry Herb Vaporizer", Currency: pculqi.PEN, Price: 20.0},

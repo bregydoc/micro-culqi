@@ -35,7 +35,7 @@ func (invoice *Invoice) ToFlatten(description ...string) *InvoiceFlatten {
 		Discount:      fmt.Sprintf("%s -%0.2f", invoice.Order.Currency.Symbol, invoice.Order.Discount),
 		TotalCost:     fmt.Sprintf("%s %0.2f", invoice.Order.Currency.Symbol, subTotal-invoice.Order.Discount),
 		CustomerName:  invoice.Order.Info.Name,
-		ChargedAmount: fmt.Sprintf("%s %0.2f", invoice.Order.Currency.Code, subTotal),
+		ChargedAmount: fmt.Sprintf("%s %0.2f", invoice.Order.Currency.Code, subTotal-invoice.Order.Discount),
 		CompanyName:   invoice.Company.Name,
 	}
 }
