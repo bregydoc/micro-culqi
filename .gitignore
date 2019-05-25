@@ -1,3 +1,6 @@
 culqi.config.yml
 .idea
 playground
+.DS_Store
+server.*
+uculqi
