@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/k0kubun/pp"
-
 	"net/http"
 )
 
@@ -35,11 +33,11 @@ type culqiError struct {
 
 // Details ...
 type Details struct {
-	Email      string
-	CardNumber string
-	ExpYear    int
-	ExpMonth   int
-	CVV        string
+	Email      string `json:"email"`
+	CardNumber string `json:"card_number"`
+	ExpYear    int    `json:"expiration_year"`
+	ExpMonth   int    `json:"expiration_month"`
+	CVV        string `json:"cvv"`
 }
 
 func (c *Culqi) getNewToken(payload tokenPayload, sessionID string) (*Token, error) {
@@ -70,7 +68,6 @@ func (c *Culqi) getNewToken(payload tokenPayload, sessionID string) (*Token, err
 			return nil, err
 		}
 
-		pp.Println(returnedError)
 		return nil, errors.New(returnedError.Message)
 	}
 
