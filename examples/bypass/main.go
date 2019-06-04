@@ -1,8 +1,9 @@
 package main
 
 import (
+	"log"
+
 	"github.com/bregydoc/micro-culqi/bypass"
-	"github.com/k0kubun/pp"
 )
 
 func main() {
@@ -18,5 +19,5 @@ func main() {
 		panic(err)
 	}
 
-	pp.Println(token)
+	log.Println(token)
 }
