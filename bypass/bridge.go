@@ -8,9 +8,9 @@ import (
 )
 
 const baseCheckoutURL = "https://checkout.culqi.com/"
-
 const sessionHeaderName = "X-CULQI-SESSIONID"
 
+// CheckoutParams ...
 type CheckoutParams struct {
 	Title        string
 	Currency     string
